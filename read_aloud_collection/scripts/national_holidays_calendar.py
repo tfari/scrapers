@@ -29,7 +29,7 @@ def national_holidays_calendar(country_code=COUNTRY_CODE):
     today_holiday = [holiday['name'] for holiday in rh.responses[0].json() if holiday['date'] == today]
 
     if len(today_holiday) > 0:
-        return 'Today is: %s ' % today_holiday[0]
+        return 'Today is: %s .' % today_holiday[0]
     else:
         return 'No holidays today.'
 
