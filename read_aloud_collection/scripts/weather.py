@@ -24,9 +24,13 @@ def weather(city):
     weather_data = (rh.responses[0].json()['consolidated_weather'][0])
 
     return "Weather state for %s: %s. " \
-           "Temperature is: %s °, With a min of: %s °, and a max of: %s °. Humidity is: %s percent" % \
-           (city, weather_data['weather_state_name'], weather_data['the_temp'], weather_data['min_temp'],
-            weather_data['max_temp'], weather_data['humidity'])
+           "Temperature is: %s °. With a min of: %s °, and a max of: %s °. Humidity is: %s percent" % \
+           (city,
+            weather_data['weather_state_name'],
+            '%.1f' % weather_data['the_temp'],
+            '%.1f' % weather_data['min_temp'],
+            '%.1f' % weather_data['max_temp'],
+            weather_data['humidity'])
 
 
 if __name__ == "__main__":
