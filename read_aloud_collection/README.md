@@ -1,15 +1,17 @@
 ### Collection of different API wrappers to use with tts_reader.py
 
 All the scripts in /scripts implement a different API to be funneled into the [Voice RSS API](http://www.voicerss.org).
-<br/>
+
 Although you can run each script separately, its intended use as a group is exemplified on collection_example.py, 
 where many of them are aggregated into a single call to provide some sort of daily information.
+
+Be advised that calling all of them together takes a few minutes to process, specially the news feeds return too much text.
 
 **Important:**
 * You need to get an API key to use tts_reader.py ([Click here](http://www.voicerss.org/login.aspx)), currency_exchange_data.py ([Click here](https://free.currencyconverterapi.com/free-api-key)), and stock_price.py ([Click here](https://financialmodelingprep.com/login))
 * elmundo_headlines.py and lanacion_headlines.py return in spanish. If you use this, or plan to extend with results in any other language, remember to
 set your prefered voice language via the optional parameter language= in the call to read_tts_single(). 
-* The possible languages for the Voice RSS API are available [here](http://www.voicerss.org/api/documentation.aspx)
+* The possible languages for the Voice RSS API are available [here](http://www.voicerss.org/api/)
 
 **Scripts:**
 * bbc_headlines.py: Reads aloud the newest [BBC](https://www.bbc.com/news/10628494) headlines by tag.
