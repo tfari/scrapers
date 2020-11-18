@@ -31,7 +31,7 @@ def national_holidays_calendar(country_code=COUNTRY_CODE):
     if len(today_holiday) > 0:
         return 'Today is: %s ' % today_holiday[0]
     else:
-        return 'No holidays today'
+        return 'No holidays today.'
 
 
 if __name__ == "__main__":
