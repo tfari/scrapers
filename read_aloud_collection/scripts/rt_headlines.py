@@ -9,10 +9,11 @@ We use fmt='8khz_8bit_mono' on tts_reader when called as __main__ because it tak
 """
 
 
-def rt_headlines(tag='news', use_descriptions=True):
+def rt_headlines(tag='news', use_descriptions=True, limit=None):
     """
     :param tag:str, the type of news, default = 'world'
     :param use_descriptions: bool, if true add descriptions to each title, default= True
+    :param limit: if not None, limit number of results, default=None
     :return: str, the titles, and optionally, descriptions, of the RT headlines for tag
     """
 
@@ -39,6 +40,10 @@ def rt_headlines(tag='news', use_descriptions=True):
             out_str += ': %s' % desc
         out.append(out_str)
         count += 1
+
+    if limit:
+        print('[*] Reducing RT from: %s to %s' % (len(out), limit))
+        out = out[:limit]
 
     return "RT %s news for today: \n%s" % (tag, '.\n'.join(out))
 
