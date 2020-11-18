@@ -6,7 +6,7 @@ Although you can run each script separately, its intended use as a group is exem
 where many of them are aggregated into a single call to provide some sort of daily information.
 
 **Important:**
-* You need to get an API key to use tts_reader.py ([here](http://www.voicerss.org/login.aspx)), and currency_exchange_data.py([here](https://free.currencyconverterapi.com/free-api-key))
+* You need to get an API key to use tts_reader.py ([Click here](http://www.voicerss.org/login.aspx)), currency_exchange_data.py ([Click here](https://free.currencyconverterapi.com/free-api-key)), and stock_price.py ([Click here](https://financialmodelingprep.com/login))
 * elmundo_headlines.py and lanacion_headlines.py return in spanish. If you use this, or plan to extend with results in any other language, remember to
 set your prefered voice language via the optional parameter language= in the call to read_tts_single(). 
 * The possible languages for the Voice RSS API are available [here](http://www.voicerss.org/api/documentation.aspx)
@@ -27,7 +27,7 @@ set your prefered voice language via the optional parameter language= in the cal
 * quotes.py: Reads aloud a quote from [Forismatic API](https://forismatic.com/en/)
 * random_advice.py: Reads aloud a random advice from [Advice Slip API](https://api.adviceslip.com/)
 * rt_headlines.py: Read aloud the newest [RT](https://www.rt.com/rss-feeds/) headlines by tag.
-* stock_price.py: Reads aloud the updated price of a stock, from [Financial Modelling Prep API](https://financialmodelingprep.com/developer/docs)
+* stock_price.py: Reads aloud the updated price of a stock, from [Financial Modelling Prep API](https://financialmodelingprep.com/developer/docs) | Needs an API KEY
 * weather.py: Reads aloud the weather from [MetaWeather API](https://www.metaweather.com/api/)
 
 
