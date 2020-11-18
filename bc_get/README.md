@@ -2,7 +2,7 @@
 
 Downloads Bandcamp tracks as .mp3. 
 
-To set the prefered output path for the files, edit the OUTPUT_PATH field in settings.json (./output by default.)
+To set the preferred output path for the files, edit the OUTPUT_PATH field in settings.json (./output by default.)
 
 **Requirements:**
 - requests
