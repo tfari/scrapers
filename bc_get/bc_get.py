@@ -20,7 +20,7 @@ Usage:
 
 DOWNLOADED = []
 OUTPUT_PATH = ''
-VERBOSE = False
+NOTIFY = False
 INVALID_FILENAME_CHARS = ['/', '\\', '?', '%', '*', ':', '|', '"', '<', '>', '.']
 
 
@@ -87,8 +87,8 @@ def get_specific_album(playlist_data, artist_cover=None):
     :return: None
     """
     # Get every track inside the playlist
-    print(playlist_data)
     if playlist_data['track_info']:
+        print('%s: %s' % (playlist_data['artist'], playlist_data['album_title']))
 
         # Get the album cover
         if playlist_data['album_cover']:
@@ -101,8 +101,7 @@ def get_specific_album(playlist_data, artist_cover=None):
                        album_release=playlist_data['album_release'], album_cover=album_cover, artist_cover=artist_cover)
 
     else:  # If the playlist is empty, its blocked for our area or for non logged-in users
-        if VERBOSE:
-            print("[!] Blocked playlist: '%s'" % playlist_data['title'])
+        print("[!] Blocked playlist: '%s'" % playlist_data['title'])
 
 
 def get_all_tracks(username, playlist_title, track_collection_data, album_release=None, album_cover=None,
@@ -135,8 +134,7 @@ def get_all_tracks(username, playlist_title, track_collection_data, album_releas
 
             count += 1  # We do it inside the check to get correct numbering for the general track list
         else:
-            if VERBOSE:
-                print("[!] Already downloaded: %s" % track_data['title'])
+            print("[!] Already downloaded: %s" % track_data['title'])
 
 
 def _path_check(path):
@@ -182,8 +180,7 @@ def get_specific_track(username, playlist_title, track_title, track_id, track_ur
     try:  # If file already exits:
         x = open(filename, 'r')
         x.close()
-        if VERBOSE:
-            print("[!] File already exists: %s" % track_title)
+        print("[!] File already exists: %s" % track_title)
 
     except FileNotFoundError:  # If not
         # Get track artwork
@@ -319,8 +316,6 @@ class InvalidAlbumUrl(GetBCTrackError):
 
 
 # Entry point
-
-
 if __name__ == '__main__':
     try:
         bc_url = sys.argv[1]
@@ -328,12 +323,14 @@ if __name__ == '__main__':
         raise MissingURL()
 
     try:
-        if sys.argv[2] == '-v':
-            VERBOSE = True
+        if sys.argv[2] == '-n':
+            NOTIFY = True
         else:
             raise InvalidOption(sys.argv[2])
     except IndexError:
         pass
 
     input_parse(bc_url)
-    NOTIFYSERVER.notify('Download finished.', 'bc_get')  # TODO -> Make it optional
+
+    if NOTIFY:
+        NOTIFYSERVER.notify('Download finished.\n %s' % bc_url, 'bc_get')
