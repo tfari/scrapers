@@ -87,12 +87,20 @@ def read_tts_single(text, language='en-us', api_key=API_KEY, fmt='16khz_16bit_st
     # Error Checking
     if not API_KEY:
         raise NoApiKey()
-    if len(text) > 25000:
-        raise TooLarge()
 
-    #
-    dl_tts('tmp', 0, text, language, api_key, fmt)
-    _read_aloud(0)
+    if len(text) > 25000:
+        print("[!] Text too large, attempting to download in separate files.")
+        pages = []
+        while len(text) > 25000:
+            pages.append(text[:25000])
+            text = text[25000:]
+        pages.append(text)
+
+        dl_tts_multiple('tmp', pages, language, api_key, fmt)
+
+    else:
+        dl_tts('tmp', 0, text, language, api_key, fmt)
+        _read_aloud(0)
 
 
 def dl_tts_multiple(filename, pages, language='en-us', api_key=API_KEY, fmt='16khz_16bit_stereo'):
@@ -131,6 +139,16 @@ def dl_tts_multiple(filename, pages, language='en-us', api_key=API_KEY, fmt='16k
         t.join()
 
     print("[*] Finished downloading %s" % filename)
+    # Read all pages
+    for i in range(count):
+        _read_aloud(i)
+
+    # Delete all pages
+    for i in range(count):
+        try:
+            os.remove('tmp%s.wav' % i)
+        except FileNotFoundError:
+            pass
 
 
 # Exceptions
