@@ -5,7 +5,7 @@ All the scripts in /scripts implement a different API to be funneled into the [V
 Although you can run each script separately, its intended use as a group is exemplified on collection_example.py, 
 where many of them are aggregated into a single call to provide some sort of daily information.
 
-Be advised that calling all of them together takes a few minutes to process, specially the news feeds return too much text.
+Be advised that calling all of them together (as in the example) takes a few minutes to process, specially the news feeds return too much text.
 
 **Important:**
 * You need to get an API key to use tts_reader.py ([Click here](http://www.voicerss.org/login.aspx)), currency_exchange_data.py ([Click here](https://free.currencyconverterapi.com/free-api-key)), and stock_price.py ([Click here](https://financialmodelingprep.com/login))
