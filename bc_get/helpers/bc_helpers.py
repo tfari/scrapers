@@ -1,14 +1,29 @@
+import json
 import requests
 import re
 from bs4 import BeautifulSoup
 
 
-# v 0.0.1
+# v 0.0.2
 
 
 """
 Bandcamp related helper functions. 
 """
+
+
+def __clean_json_strs(s):
+    """
+    Clean instances when the json is URI encoded.
+    :param s: str
+    :return: {'data': json}
+    """
+    # Clean
+    s = s.replace('&quot;', '"').strip()
+    s = s[1:] if s[0] == '"' else s
+    s = s[:-1] if s[-1] == '"' else s
+
+    return {'data': json.loads(s)}
 
 
 def is_valid_bandcamp_url(url):
@@ -57,17 +72,17 @@ def get_album_info(username, album_relative_url):
     bs = BeautifulSoup(r.text, 'html.parser')
     scripts = bs.findAll('script')
     for s in scripts:
-        if str(s).find('var TralbumData') != -1:
-            response['artist'] = re.findall('artist: ".*"', str(s))[0].split('"')[1]
-            response['artist_avatar'] = re.findall('image_id: .*', str(s))[0].split(': ')[1]
-            response['album_title'] = re.findall('album_title: ".*"', str(s))[0].split('"')[1]
-            response['album_cover'] = re.findall('art_id: .*,', str(s))[0].split(': ')[1][:-1]
-            response['track_info'] = eval(re.findall('trackinfo: .*', str(s))[0].split(': ')[1][:-1].
-                                          replace('null', 'None').replace('false', 'False').replace('true', 'True'))
+        if str(s).find('data-tralbum') != -1:
+            s = str(s).split('data-tralbum=')[1].replace("'", '').split('data-tralbum-collect-info')[0]
+            jsoned = __clean_json_strs(s)
+
+            response['artist'] = jsoned['data']['artist']
+            response['artist_avatar'] = None
+            response['album_title'] = jsoned['data']['current']['title']
+            response['album_cover'] = str(jsoned['data']['art_id'])
+            response['track_info'] = jsoned['data']['trackinfo']
             try:
-                response['album_release'] = eval(re.findall('current: .*', str(s))[0].split(': ')[1][:-1].
-                                             replace('null', 'None').replace('false', 'False').
-                                             replace('true', 'True'))['publish_date'].split(' ')[2]
+                response['album_release'] = str(jsoned['data']['current']['release_date']).split(' ')[2]
             except SyntaxError:
                 response['album_release'] = None
 
@@ -85,16 +100,18 @@ def get_track_info(username, track_relative_url):
     bs = BeautifulSoup(r.text, 'html.parser')
     scripts = bs.findAll('script')
     for s in scripts:
-        if str(s).find('var TralbumData') != -1:
-            response['artist'] = re.findall('artist : ".*"', str(s))[0].split('"')[1]
-            response['artist_avatar'] = re.findall('image_id: .*', str(s))[0].split(': ')[1]
-            response['album_cover'] = re.findall('art_id: .*', str(s))[0].split(': ')[1][:-1]
+        if str(s).find('data-tralbum') != -1:
+            s = str(s).split('data-tralbum=')[1].replace("'", '').split('data-tralbum-collect-info')[0]
+            jsoned = __clean_json_strs(s)
+
+            response['artist'] = jsoned['data']['artist']
+            response['artist_avatar'] = None
+            response['album_cover'] = str(jsoned['data']['art_id'])
+            response['track_info'] = jsoned['data']['trackinfo'][0]
+
             try:
-                response['album_url'] = re.findall('album_url: .*', str(s))[0].split('"')[1]
+                response['album_url'] = jsoned['data']['album_url']
             except IndexError:
                 response['album_url'] = None
-
-            response['track_info'] = eval(re.findall('trackinfo: .*', str(s))[0].split(': ')[1][:-1].
-                                          replace('null', 'None').replace('false', 'False').replace('true', 'True'))[0]
 
     return response
