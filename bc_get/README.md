@@ -6,12 +6,14 @@ To set the prefered output path for the files, edit the OUTPUT_PATH field in set
 
 **Requirements:**
 - requests
+- bs4
+- mutagen
 
 **Usage:**
 ```
-    python bc_get.py URL | -v
+    python bc_get.py URL | -n
 ```
-The -v optional parameter is passed to activate verbose printing
+The -n optional parameter is passed to notify when the download is finished.
 
 **Example:**
 
@@ -19,8 +21,8 @@ The -v optional parameter is passed to activate verbose printing
     python bc_get.py MyUser.bandcamp.com
 ```
 Downloads all non-existing albums and orphan tracks (singles) into the OUTPUT_PATH specified in settings.json. 
-<br>
-It is what you want use to keep fully updated on the content as well. 
+(It is what you want use to keep fully updated on the content as well, as it doesn't download files that already exist in
+the output directory.)
 
 **Behaviour by URL type:** 
 ```
