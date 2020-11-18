@@ -11,13 +11,13 @@ def design_quotes():
     """
     :return: str, a design Quote
     """
-    url = 'http://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[posts_per_page]=1'
+    url = 'https://quotesondesign.com/wp-json/wp/v2/posts/?orderby=rand'
     rh = RequestHandler([url], RequestData(GET), RequestErrorData(allow_errors=False))
     rh.run()
     jsoned = rh.responses[0].json()[0]
-    bs = BeautifulSoup(jsoned['content'], 'html.parser')
+    bs = BeautifulSoup(jsoned['content']['rendered'], 'html.parser')
     quote = bs.text.replace('\n', '')
-    return "%s said: %s" % (jsoned['title'], quote)
+    return "%s said: %s" % (jsoned['title']['rendered'], quote)
 
 
 if __name__ == "__main__":
