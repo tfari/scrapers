@@ -1,3 +1,6 @@
+### Deprecated
+Gab changed its API and now hides followers behind a login screen. At the moment of writing this api.gab.com times out.
+
 ### get_gab
 
 This script scraps the data of the followers or following lists of a gab.ai user and stores it into an excel file.
