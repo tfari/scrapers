@@ -30,7 +30,6 @@ def collection():
                 stock_price.stock_price('AAPL'),
                 "News for today:",
                 bbc_headlines.bbc_headlines('world'),
-                bbc_headlines.bbc_headlines('world'),
                 cnn_headlines.cnn_headlines(),
                 rt_headlines.rt_headlines(),
                 hackernews_top_stories.hackernews(),
@@ -39,7 +38,8 @@ def collection():
                 quotes.quotes(),
                 "Daily advice: ",
                 random_advice.random_advice(),
-                bored_advice.bored_activity()]
+                bored_advice.bored_activity()
+                ]
 
     out = '\n\n'.join(returns)
     print("[*] Calling tts_reader")
