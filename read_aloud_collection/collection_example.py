@@ -31,7 +31,7 @@ def collection():
                 "News for today:",
                 bbc_headlines.bbc_headlines('world'),
                 cnn_headlines.cnn_headlines(),
-                rt_headlines.rt_headlines(),
+                rt_headlines.rt_headlines(limit=30),
                 hackernews_top_stories.hackernews(),
                 "Daily Quotes: ",
                 design_quotes.design_quotes(),
