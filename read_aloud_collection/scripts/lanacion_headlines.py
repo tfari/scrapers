@@ -9,7 +9,7 @@ We use fmt='8khz_8bit_mono' on tts_reader when called as __main__ because it tak
 """
 
 
-def lanacion_headline(use_descriptions=True):
+def lanacion_headlines(use_descriptions=True):
     """
     :param use_descriptions: bool, if true add descriptions to each title, default= True
     :return: str, the titles of the La Nacion headlines for latest news
