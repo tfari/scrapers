@@ -1,6 +1,3 @@
-from bs4 import BeautifulSoup
-import json
-
 from helpers.req_handler import GET, RequestHandler, RequestData, RequestErrorData
 from helpers.tts_reader import read_tts_single
 
@@ -8,19 +5,28 @@ from helpers.tts_reader import read_tts_single
 Reads aloud the updated price of a stock, from Financial Modelling Prep API
 """
 
+API_KEY = None
+
 
 def stock_price(symbol):
     """
     :param symbol: str, stock symbol
     :return: str, exchange rate of one symbol_1 in symbol_2 currency
     """
-    url = 'https://financialmodelingprep.com/api/company/real-time-price/%s' % (symbol.upper())
+    if not API_KEY:
+        raise NoApiKey()
+
+    url = 'https://financialmodelingprep.com/api/v3/quote/%s?apikey=%s' % (symbol.upper(), API_KEY)
 
     rh = RequestHandler([url], RequestData(GET), RequestErrorData(allow_errors=False))
     rh.run()
-    bs = BeautifulSoup(rh.responses[0].text, 'html.parser')
 
-    return '%s is valued at %s USD' % (symbol, json.loads(bs.find('pre').text)['price'])
+    return '%s stocks are valued at %s USD.' % (rh.responses[0].json()[0]['name'],
+                                                rh.responses[0].json()[0]['price'])
+
+
+class NoApiKey(Exception):
+    pass
 
 
 if __name__ == "__main__":
