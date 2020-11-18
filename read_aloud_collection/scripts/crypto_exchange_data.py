@@ -19,7 +19,7 @@ def crypto_exchange(symbol_1, symbol_2):
         print("[!] Crypto exchange returned error: %s" % rh.errors)
         return 'Crypto exchange returned error: %s' % rh.errors[0]['response'].status_code
 
-    return 'One %s is valued %s %s' % (symbol_1, '{0:.10}'.format(rh.responses[0].json()['ticker']['price']), symbol_2)
+    return 'One %s is valued %s %s.' % (symbol_1, '{0:.10}'.format(rh.responses[0].json()['ticker']['price']), symbol_2)
 
 
 if __name__ == "__main__":

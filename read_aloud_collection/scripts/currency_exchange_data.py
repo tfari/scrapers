@@ -23,7 +23,7 @@ def currency_exchange(symbol_1, symbol_2):
     rh = RequestHandler([url], RequestData(GET), RequestErrorData(allow_errors=False))
     rh.run()
     price = (rh.responses[0].json()['%s_%s' % (symbol_1.upper(), symbol_2.upper())])
-    return 'One %s is valued %s %s' % (symbol_1, '{0:.2}'.format(price), symbol_2)
+    return 'One %s is valued %s %s.' % (symbol_1, '{0:.2}'.format(price), symbol_2)
 
 
 # Exceptions
