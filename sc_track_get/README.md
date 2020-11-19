@@ -1,4 +1,4 @@
-### sc_get
+### sc_track_get
 
 Downloads Soundcloud tracks as .mp3. 
 
