@@ -3,7 +3,7 @@ import sys
 import requests
 import json
 
-from helpers.sc_helpers import get_client_id, get_user_data, get_all_playlists_data, get_all_tracks_data, _resolve
+from helpers.sc_helpers import get_client_id, get_user_data, get_all_playlists_data, get_all_tracks_data, _resolve, get_stream_url
 from helpers.file_getter import get_file
 from helpers.id3_wrapper import mp3_tag_file
 
@@ -78,8 +78,8 @@ def get_all_playlists(playlists_data, artist_cover=None):
     :param artist_cover: file
     :return: None
     """
-    for playlist in playlists_data:
-        r = requests.get('http://api.soundcloud.com/playlists/ ' + str(playlist['id']) + '?client_id=' + CLIENT_ID)
+    for playlist in playlists_data['collection']:
+        r = requests.get('http://api-v2.soundcloud.com/playlists/' + str(playlist['id']) + '?client_id=' + CLIENT_ID)
         playlist_data = r.json()
 
         get_specific_playlist(playlist_data, artist_cover)
@@ -92,9 +92,9 @@ def get_specific_playlist(playlist_data, artist_cover=None):
     :param artist_cover: file
     :return: None
     """
-
     # Get the album release year
-    album_release = playlist_data['release_year'] if playlist_data['release_year'] else playlist_data['created_at'].split('/')[0]
+    album_release = playlist_data['release_date'].split('-')[0] \
+        if playlist_data['release_date'] else playlist_data['created_at'].split('-')[0]
 
     # Get every track inside the playlist
     if playlist_data['tracks']:
@@ -172,34 +172,44 @@ def get_specific_track(username, playlist_title, track_data, album_release=None,
     _path_check(username + '/' + playlist_title)
 
     # Create filename
-    filename = OUTPUT_PATH + '/' + username + '/' + playlist_title + '/' + track_data['title'] + '.mp3'
-
-    # If file already exits:
     try:
-        x = open(filename, 'r')
-        x.close()
-        if VERBOSE:
-            print("[!] File already exists: %s" % (track_data['title']))
+        filename = OUTPUT_PATH + '/' + username + '/' + playlist_title + '/' + track_data['title'] + '.mp3'
+    except KeyError:
+        pass
+    else:
+        # If file already exits:
+        try:
+            x = open(filename, 'r')
+            x.close()
+            if VERBOSE:
+                print("[!] File already exists: %s" % (track_data['title']))
 
-    # If not
-    except FileNotFoundError:
-        # Get track artwork
-        if track_data['artwork_url']:
-            url = track_data['artwork_url'].split('-large.jpg')[0] + '-t500x500.jpg'
-            track_cover = requests.get(url).content
-        else:
-            track_cover = None
+        # If not
+        except FileNotFoundError:
+            # Get track artwork
+            if track_data['artwork_url']:
+                url = track_data['artwork_url'].split('-large.jpg')[0] + '-t500x500.jpg'
+                track_cover = requests.get(url).content
+            else:
+                track_cover = None
 
-        # Download
-        get_file('[%s]' % track_data['user']['username'], track_data['stream_url'] + '?client_id=%s' % CLIENT_ID, filename)
+            # Download
+            try:
+                stream_url = track_data['media']['transcodings'][1]['url']
+            except IndexError:
+                pass
+            else:
+                actual_url = get_stream_url(stream_url + '?client_id=%s' % CLIENT_ID)
 
-        # Edit the tags of the track to match the track_data
-        mp3_tag_file(filename, track_data['user']['username'], track_data['title'], track_genre=track_data['genre'],
-                     track_count=track_count, album_artist=username, album_title=playlist_title, album_release=album_release,
-                     album_cover=album_cover, artist_cover=artist_cover, track_cover=track_cover)
+                get_file('[%s]' % track_data['user']['username'], actual_url['url'], filename)
 
-    # Append track to DOWNLOADED list (We do it here to keep track of previously downloaded tracks too.)
-    DOWNLOADED.append(track_data['id'])
+                # Edit the tags of the track to match the track_data
+                mp3_tag_file(filename, track_data['user']['username'], track_data['title'], track_genre=track_data['genre'],
+                             track_count=track_count, album_artist=username, album_title=playlist_title, album_release=album_release,
+                             album_cover=album_cover, artist_cover=artist_cover, track_cover=track_cover)
+
+        # Append track to DOWNLOADED list (We do it here to keep track of previously downloaded tracks too.)
+        DOWNLOADED.append(track_data['id'])
 
 
 #######################################################################################################################
@@ -234,7 +244,7 @@ def input_parse(input_url):
     user_data = get_user_data(splitted_input[1], CLIENT_ID)
     username = user_data['username']
     all_playlists_data = get_all_playlists_data(user_data['id'], CLIENT_ID)
-    all_tracks_data = get_all_tracks_data(user_data['id'], CLIENT_ID)
+    all_tracks_data = get_all_tracks_data(user_data['id'], CLIENT_ID)['collection']
 
     # We reverse the general track list to ensure track counting does not change when new tracks are added
     all_tracks_data.reverse()

@@ -86,7 +86,7 @@ def _resolve(resolve_url, client_id):
     :param client_id: string, a valid client_id
     :return: dict, the .json response to the resolve request
     """
-    url = 'http://api.soundcloud.com/resolve?url=%s&client_id=%s' % (resolve_url, client_id)
+    url = 'http://api-v2.soundcloud.com/resolve?url=%s&client_id=%s' % (resolve_url, client_id)
     # print(url)
     rh = RequestHandler([url], RequestData(GET), RequestErrorData(allow_errors=False))
     rh.run()
@@ -119,13 +119,15 @@ def get_user_data(user_name, client_id):
 
 
 def get_all_playlists_data(user_id, client_id):
-    """
-    :param user_id:
-    :param client_id:
-    :return: Playlists for user_name
-    """
-    return _api_call('http://api.soundcloud.com/users/%s/playlists' % user_id, client_id, '&limit=9999999')
+    return _api_call('http://api-v2.soundcloud.com/users/%s/playlists' % user_id, client_id, '&limit=9999')
 
 
 def get_all_tracks_data(user_id, client_id):
-    return _api_call('http://api.soundcloud.com/users/%s/tracks' % user_id, client_id, '&limit=9999999')
+    return _api_call('http://api-v2.soundcloud.com/users/%s/tracks' % user_id, client_id, '&limit=9999')
+
+
+def get_stream_url(url):
+    rh = RequestHandler([url], RequestData(GET), RequestErrorData(allow_errors=False))
+    rh.run()
+    response = rh.responses[0].json()
+    return response
