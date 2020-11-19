@@ -6,6 +6,9 @@ geckodriver.exe must be in path to generate a client_id via Selenium.
 
 If the client_id no longer works, just delete the file "client_id" and run again to generate a new one.
 
+To set the preferred output path for the files, edit the OUTPUT_PATH field in settings.json (./output by default.)
+
+(Settings file gets created first time the script runs.)
 
 **Usage:**
 ```

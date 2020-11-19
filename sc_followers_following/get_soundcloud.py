@@ -1,16 +1,11 @@
+import os
 import sys
+import json
 
 from helpers.sc_helpers import get_client_id, get_user_id
 from helpers.req_handler import GET, RequestData, RequestErrorData, RequestHandler
 from helpers.excel_writer import ExcelWriter
 
-VALID_MODES = FOLLOWERS, FOLLOWINGS = 'followers', 'followings'
-
-VALID_ORDER_KEYS = ['country', 'city', 'description', 'track_count', 'discogs_name', 'public_favorites_count', 'id',
-                    'reposts_count', 'myspace_name', 'website_title', 'last_modified', 'first_name', 'plan', 'website',
-                    'playlist_count', 'kind', 'last_name', 'uri', 'followings_count', 'likes_count', 'full_name',
-                    'avatar_url', 'comments_count', 'followers_count', 'online', 'permalink', 'permalink_url',
-                    'username']
 
 """
 Creates an .xlsx file of a followers or following list of a soundcloud.com user.
@@ -43,6 +38,34 @@ Terminal Usage:
 """
 
 
+# LOADS OUTPUT_PATH
+try:
+    OUTPUT_PATH = json.loads(open('settings.json', 'r').read())['OUTPUT_PATH']
+except FileNotFoundError:
+    default = {'OUTPUT_PATH': os.getcwd() + '/output'}
+    with open('settings.json', 'w') as f:
+        f.write(json.dumps(default, indent=True))
+    OUTPUT_PATH = default['OUTPUT_PATH']
+
+if OUTPUT_PATH == '/output':
+    settings = {'OUTPUT_PATH': os.getcwd() + '/output'}
+    with open('settings.json', 'w') as f:
+        f.write(json.dumps(settings, indent=True))
+    OUTPUT_PATH = settings['OUTPUT_PATH']
+
+# Path check
+if not (os.path.isdir(OUTPUT_PATH)):
+    os.makedirs(OUTPUT_PATH)
+
+
+VALID_MODES = FOLLOWERS, FOLLOWINGS = 'followers', 'followings'
+
+VALID_ORDER_KEYS = ['country', 'city', 'description', 'track_count', 'discogs_name', 'public_favorites_count', 'id',
+                    'reposts_count', 'myspace_name', 'website_title', 'last_modified', 'first_name', 'plan', 'website',
+                    'playlist_count', 'kind', 'last_name', 'uri', 'followings_count', 'likes_count', 'full_name',
+                    'avatar_url', 'comments_count', 'followers_count', 'online', 'permalink', 'permalink_url',
+                    'username']
+
 def get_data(user_name, mode, order_by):
     """
     Produces an excel comprised of either the followers or the following lists (depending on mode) of Soundcloud user
@@ -72,7 +95,7 @@ def get_data(user_name, mode, order_by):
     headers.remove('badges')
     headers.remove('visuals')
 
-    xls = ExcelWriter(user_name + '_' + mode, headers)  # Init ExcelWriter()
+    xls = ExcelWriter(OUTPUT_PATH + '/' + user_name + '_' + mode, headers)  # Init ExcelWriter()
 
     # Get counts
     followers_count = jsoned['followers_count']
