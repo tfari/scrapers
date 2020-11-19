@@ -5,9 +5,9 @@
 
  * **read_aloud_collection**: Collection of different API wrappers to use with tts_reader.py (text to speech).
  
- * **bc_get**: Downloads Bandcamp tracks as .mp3.
+ * **bc_get**: Downloads Bandcamp tracks as .mp3 and tags them.
  
- * **sc_track_get**: Downloads Soundcloud tracks as .mp3.
+ * **sc_track_get**: Downloads Soundcloud tracks as .mp3 and tags them.
  
  * **sc_followers_following**: Scraps the data of the followers or following lists of a soundcloud.com user and stores it into an excel file.
  
