@@ -1,6 +1,6 @@
 ### oeis_midi_downloader
 
-The [Online Encyclopedia of Integer Sequences](https://oeis.org/), provides midi representation of its stored sequences.
+The [Online Encyclopedia of Integer Sequences](https://oeis.org/) provides midi representation of its stored sequences.
 <br/>
 
 This script bulk downloads ranges of them, and allows to determine the desired BPM and sequence length of the midis.
