@@ -86,7 +86,7 @@ def _resolve(resolve_url, client_id):
     :param client_id: string, a valid client_id
     :return: dict, the .json response to the resolve request
     """
-    url = 'http://api.soundcloud.com/resolve?url=%s&client_id=%s' % (resolve_url, client_id)
+    url = 'https://api-v2.soundcloud.com/resolve?url=%s&client_id=%s' % (resolve_url, client_id)
     rh = RequestHandler([url], RequestData(GET), RequestErrorData(allow_errors=False))
     rh.run()
     response = rh.responses[0].json()
@@ -101,7 +101,7 @@ def get_user_id(user_name, client_id):
     :param client_id: string, a valid client_id
     :return: string, user_id of user_name
     """
-    return _resolve('http://soundcloud.com/%s' % user_name, client_id)['id']
+    return _resolve('https://soundcloud.com/%s' % user_name, client_id)['id']
 
 
 def get_track_id(track_url, client_id):

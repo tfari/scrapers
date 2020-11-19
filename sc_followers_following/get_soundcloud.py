@@ -60,13 +60,18 @@ def get_data(user_name, mode, order_by):
     print('[*] Scraping %s data on %s, user_id: %s, ordered by key: "%s"' % (mode, user_name, user_id, order_by))
 
     # Get headers
-    url = 'https://api.soundcloud.com/users/%s?client_id=%s' % (user_id, client_id)
+    url = 'https://api-v2.soundcloud.com/users/%s?client_id=%s' % (user_id, client_id)
     rh = RequestHandler([url], RequestData(GET), RequestErrorData(allow_errors=False))
     rh.run()
     jsoned = rh.responses[0].json()
     headers = [key for key in jsoned.keys()]
 
-    headers.remove('subscriptions')  # Only key different from users/ and followers/ returns.
+    # Remove nested dicts
+    headers.remove('creator_subscriptions')
+    headers.remove('creator_subscription')
+    headers.remove('badges')
+    headers.remove('visuals')
+
     xls = ExcelWriter(user_name + '_' + mode, headers)  # Init ExcelWriter()
 
     # Get counts
@@ -79,7 +84,7 @@ def get_data(user_name, mode, order_by):
 
     # Get followers/followings list while there is a next_href url
     page_size = 200
-    url = 'https://api.soundcloud.com/users/%s/%s?client_id=%s&page_size=%s&format=json' % \
+    url = 'https://api-v2.soundcloud.com/users/%s/%s?client_id=%s&page_size=%s&format=json' % \
           (user_id, mode, client_id, page_size)
 
     rd, rde = RequestData(GET), RequestErrorData(allow_errors=False)
@@ -88,8 +93,17 @@ def get_data(user_name, mode, order_by):
         rh = RequestHandler([url], rd, rde)
         rh.run()
         jsoned = rh.responses[0].json()
-        [xls.add(user) for user in jsoned['collection']]
+        for user_data in jsoned['collection']:
+            user_data.pop('creator_subscriptions')
+            user_data.pop('creator_subscription')
+            user_data.pop('badges')
+            user_data.pop('visuals')
+
+            xls.add(user_data)
+
         url = jsoned['next_href']
+        url = url + '&client_id=%s' % client_id if url else url
+
     print('[*][*] Fetched %s of %s %s' % (len(xls.data), count_using, mode))
 
     # Sort and write
@@ -117,9 +131,10 @@ class BadOrderHeader(GetSoundcloudError):
     pass
 
 
+# Entry point
 if __name__ == '__main__':
     # Set default values
-    user_name, mode, order_by = '', FOLLOWERS, 'country'
+    user_name, mode, order_by = '', FOLLOWERS, 'country_code'
 
     # Check username is there
     try:
@@ -141,4 +156,3 @@ if __name__ == '__main__':
         pass
 
     get_data(user_name, mode, order_by)
-
