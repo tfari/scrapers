@@ -4,6 +4,12 @@ Filter and extract some basic information of a list of domains.
 We tested using the .csv subset of those provided by [NICathon](https://www.opendatacordoba.org/NICathon/data.html), in check_ar_csv.py.
 <br/>
 <br/>
+
+**Requirements:**
+- requests
+- bs4
+- openpyxl
+
 **Usage:**
 
 Simply call thread_urls_check() in check_urls.py with the desired parameters.

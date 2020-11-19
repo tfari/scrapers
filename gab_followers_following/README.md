@@ -9,6 +9,10 @@ To set the preferred output path for the files, edit the OUTPUT_PATH field in se
 
 (Settings file gets created first time the script runs.)
 
+**Requirements:**
+- requests
+- openpyxl
+
 **Usage:**
 ```
 python get_gab.py USERNAME | MODE | ORDER_HEADER | NUM_THREADS | MAX_PASSES | SLEEP_PASS

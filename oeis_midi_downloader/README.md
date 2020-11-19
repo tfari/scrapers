@@ -9,6 +9,10 @@ To set the preferred output path for the files, edit the OUTPUT_PATH field in se
 
 (Settings file gets created first time the script runs.)
 
+**Requirements:**
+- requests
+- bs4
+
 **Usage:**
 ```
 python oeis_md.py MIN_RANGE MAX_RANGE NUM_THREDS | BPMS SEQ_LENGTH

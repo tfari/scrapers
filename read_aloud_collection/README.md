@@ -7,6 +7,10 @@ where many of them are aggregated into a single call to provide some sort of dai
 
 Be advised that calling all of them together (as in the example) takes a few minutes to process, specially the news feeds return too much text.
 
+**Requirements:**
+- requests
+- openpyxl
+
 **Important:**
 * You need to get an API key to use tts_reader.py ([Click here](http://www.voicerss.org/login.aspx)), currency_exchange_data.py ([Click here](https://free.currencyconverterapi.com/free-api-key)), and stock_price.py ([Click here](https://financialmodelingprep.com/login))
 * elmundo_headlines.py and lanacion_headlines.py return in spanish. If you use this, or plan to extend with results in any other language, remember to

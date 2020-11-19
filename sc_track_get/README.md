@@ -6,6 +6,10 @@ geckodriver.exe must be in PATH if we need to generate a client_id via Selenium.
 
 To set the prefered output path for the files, edit the OUTPUT_PATH field in settings.json (./output by default.)
 
+**Requirements:**
+- requests
+- mutagen
+
 **Usage:**
 ```
     python sc_get.py URL | -v
